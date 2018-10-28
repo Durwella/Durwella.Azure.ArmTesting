@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <!-- MSBuildThisFileDirectory will be like C:\Users\JacobFoshee\.nuget\packages\mypackage\1.0.0\build\netstandard1.0\ -->
+    <ArmTestingCommand Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">"$(MSBuildThisFileDirectory)../net46/Durwella.Azure.ArmTesting.Build.exe"</ArmTestingCommand>
+    <ArmTestingCommand Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp' OR '$(TargetFrameworkIdentifier)' == '.NETStandard'">dotnet "$(MSBuildThisFileDirectory)../netcoreapp2.1/Durwella.Azure.ArmTesting.Build.dll"</ArmTestingCommand>
+  </PropertyGroup>
+
+  <Target Name="MyBuildTarget" AfterTargets="CoreCompile">
+    <Exec Command="$(ArmTestingCommand) $(TargetPathWithTargetPlatformMoniker)" />
+  </Target>
+</Project>
