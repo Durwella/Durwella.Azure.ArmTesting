@@ -6,7 +6,7 @@ namespace Durwella.Azure.ArmTesting.Build
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello Durwella.Azure.ArmTesting.Build!");
+            Console.WriteLine("Hello from Durwella.Azure.ArmTesting.Build!");
         }
     }
 }
