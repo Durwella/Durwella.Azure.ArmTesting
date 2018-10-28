@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Durwella.Azure.ArmTesting.Build", "Durwella.Azure.ArmTesting.Build\Durwella.Azure.ArmTesting.Build.csproj", "{B187598F-8A07-4211-837B-B67A6FA7B0E1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Durwella.Azure.ArmTesting.Build.PackageTest.NetCore21", "Durwella.Azure.ArmTesting.Build.PackageTest.NetCore21\Durwella.Azure.ArmTesting.Build.PackageTest.NetCore21.csproj", "{CE2749C5-BA6F-42D8-A237-31B2372DFABD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B187598F-8A07-4211-837B-B67A6FA7B0E1} = {B187598F-8A07-4211-837B-B67A6FA7B0E1}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{969F0B35-95C4-4456-B1B2-E5AE485B5391}"
 	ProjectSection(SolutionItems) = preProject
