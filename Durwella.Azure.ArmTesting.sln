@@ -7,6 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Durwella.Azure.ArmTesting.B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Durwella.Azure.ArmTesting.Build.PackageTest.NetCore21", "Durwella.Azure.ArmTesting.Build.PackageTest.NetCore21\Durwella.Azure.ArmTesting.Build.PackageTest.NetCore21.csproj", "{CE2749C5-BA6F-42D8-A237-31B2372DFABD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{969F0B35-95C4-4456-B1B2-E5AE485B5391}"
+	ProjectSection(SolutionItems) = preProject
+		nuget.config = nuget.config
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
