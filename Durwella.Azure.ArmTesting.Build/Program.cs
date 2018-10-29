@@ -1,10 +1,21 @@
-﻿using System.Linq;
+﻿using Durwella.Azure.ArmTesting.ServiceInterfaces;
+using Durwella.Azure.ArmTesting.Services;
+using SimpleInjector;
+using System.Linq;
 using static System.Console;
 
 namespace Durwella.Azure.ArmTesting.Build
 {
-    class Program
+    static class Program
     {
+        static readonly Container _container;
+
+        static Program()
+        {
+            _container = new Container();
+            _container.Register<IArmTemplateEnumeration, ArmTemplateEnumeration>();
+        }
+
         static void Main(string[] args)
         {
 #if DEBUG
@@ -20,7 +31,7 @@ namespace Durwella.Azure.ArmTesting.Build
             WriteLine($"Project Path: {projectPath}");
 #endif
             Write("  ARM Templates: ");
-            var armTemplateEnumeration = new ArmTesting.Services.ArmTemplateEnumeration();
+            var armTemplateEnumeration = _container.GetInstance<IArmTemplateEnumeration>();
             var armTemplates = armTemplateEnumeration.EnumerateArmTemplatePaths(projectPath);
             if (armTemplates.Any())
                 WriteLine();

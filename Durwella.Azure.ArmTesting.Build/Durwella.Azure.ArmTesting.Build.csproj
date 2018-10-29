@@ -24,6 +24,9 @@
     <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Publish" Properties="TargetFramework=%(_TargetFramework.Identity)" />
   </Target>
   <ItemGroup>
+    <PackageReference Include="SimpleInjector" Version="4.3.0" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Durwella.Azure.ArmTesting\Durwella.Azure.ArmTesting.csproj" />
   </ItemGroup>
   

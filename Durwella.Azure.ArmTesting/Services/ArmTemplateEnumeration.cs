@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Durwella.Azure.ArmTesting.ServiceInterfaces;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace Durwella.Azure.ArmTesting.Services
 {
-    public class ArmTemplateEnumeration
+    public class ArmTemplateEnumeration : IArmTemplateEnumeration
     {
         /// <summary>
         /// The conventional name for ARM templates is azuredeploy.json.
