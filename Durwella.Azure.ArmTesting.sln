@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Durwella.Azure.ArmTesting.B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Durwella.Azure.ArmTesting", "Durwella.Azure.ArmTesting\Durwella.Azure.ArmTesting.csproj", "{B3D9963D-E64B-4C8F-8F59-73C07F245C05}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Durwella.Azure.ArmTesting.Tests", "Durwella.Azure.ArmTesting.Tests\Durwella.Azure.ArmTesting.Tests.csproj", "{875243D1-67D5-438C-BF33-0BF2F62696EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{B3D9963D-E64B-4C8F-8F59-73C07F245C05}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3D9963D-E64B-4C8F-8F59-73C07F245C05}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3D9963D-E64B-4C8F-8F59-73C07F245C05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{875243D1-67D5-438C-BF33-0BF2F62696EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{875243D1-67D5-438C-BF33-0BF2F62696EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{875243D1-67D5-438C-BF33-0BF2F62696EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{875243D1-67D5-438C-BF33-0BF2F62696EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
