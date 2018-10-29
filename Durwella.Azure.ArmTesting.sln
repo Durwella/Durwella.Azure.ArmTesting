@@ -13,6 +13,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{969F0B35-95C4-4456-B1B2-E5AE485B5391}"
 	ProjectSection(SolutionItems) = preProject
 		nuget.config = nuget.config
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Durwella.Azure.ArmTesting.Build.PackageTest.Net46", "Durwella.Azure.ArmTesting.Build.PackageTest.Net46\Durwella.Azure.ArmTesting.Build.PackageTest.Net46.csproj", "{E1D7ECF8-94F7-479E-9786-7CB9DFC80F53}"

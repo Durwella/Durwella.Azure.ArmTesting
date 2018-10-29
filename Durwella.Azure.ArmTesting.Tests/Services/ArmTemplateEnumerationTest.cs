@@ -41,12 +41,10 @@ namespace Durwella.Azure.ArmTesting.Tests.Services
             var directory = GetTemporaryDirectory();
             var projectPath = Combine(directory, "Test.csproj");
             WriteAllText(projectPath, @"<Project Sdk=""Microsoft.NET.Sdk""></Project>");
-            var subDir1 = Combine(directory, "sub1");
-            Directory.CreateDirectory(subDir1);
+            var subDir1 = CreateDirectory(directory, "sub1");
             var azureDeploy1 = Combine(subDir1, "AzureDeploy.json");
             WriteAllText(azureDeploy1, "{}");
-            var subDir2 = Combine(directory, "sub2");
-            Directory.CreateDirectory(subDir2);
+            var subDir2 = CreateDirectory(directory, "sub2");
             var azureDeploy2 = Combine(subDir2, "AzureDeploy.json");
             WriteAllText(azureDeploy2, "{}");
 
@@ -75,8 +73,7 @@ namespace Durwella.Azure.ArmTesting.Tests.Services
             var projectPath = Combine(directory, "Test.csproj");
             WriteAllText(projectPath, @"<Project Sdk=""Microsoft.NET.Sdk""></Project>");
             WriteAllText(Combine(directory, "project.json"), "{ }");
-            var subDir = Combine(directory, "sub");
-            Directory.CreateDirectory(subDir);
+            var subDir = CreateDirectory(directory, "sub");
             var armTemplatePath = Combine(subDir, "other.json");
             Copy(@"Examples\basic.json", armTemplatePath);
 
@@ -84,7 +81,29 @@ namespace Durwella.Azure.ArmTesting.Tests.Services
                 .Should().Equal(armTemplatePath);
         }
 
-        // TODO: Exclude bin, obj, .vs folders
+        [Theory(DisplayName = "Not /bin/...")]
+        [InlineAutoMoqData("bin")]
+        [InlineAutoMoqData("obj")]
+        [InlineAutoMoqData(".vs")]
+        public void IgnoreBinDirectory(string binDir, ArmTemplateEnumeration subject)
+        {
+            var directory = GetTemporaryDirectory();
+            var projectPath = Combine(directory, "Test.csproj");
+            WriteAllText(projectPath, @"<Project Sdk=""Microsoft.NET.Sdk""></Project>");
+            var bin = CreateDirectory(directory, binDir);
+            Copy(@"Examples\basic.json", Combine(bin, "azuredeploy.json"));
+            var sub = CreateDirectory(bin, "sub");
+            Copy(@"Examples\basic.json", Combine(sub, "azuredeploy.json"));
 
+            subject.EnumerateArmTemplatePaths(projectPath)
+                .Should().BeEmpty();
+        }
+
+        private static string CreateDirectory(string directory, string subDirectoryName)
+        {
+            var subdirectoryPath = Combine(directory, subDirectoryName);
+            Directory.CreateDirectory(subdirectoryPath);
+            return subdirectoryPath;
+        }
     }
 }
