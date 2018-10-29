@@ -7,6 +7,6 @@
   </PropertyGroup>
 
   <Target Name="MyBuildTarget" AfterTargets="CoreCompile">
-    <Exec Command="$(ArmTestingCommand) $(MSBuildProjectDirectory)" />
+    <Exec Command="$(ArmTestingCommand) &quot;$(MSBuildProjectFullPath)&quot;" />
   </Target>
 </Project>

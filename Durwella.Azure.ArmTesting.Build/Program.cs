@@ -13,12 +13,12 @@ namespace Durwella.Azure.ArmTesting.Build
 #endif
             if (args.Length == 0)
             {
-                Console.Error.WriteLine("Durwella.Azure.ArmTesting.Build requires a command line argument of the project directory.");
+                Console.Error.WriteLine("Durwella.Azure.ArmTesting.Build requires a command line argument of the project path.");
                 return;
             }
-            var projectDirectory = args[0];
+            var projectPath = args[0];
 #if DEBUG
-            Console.WriteLine($"Project Directory: {projectDirectory}");
+            Console.WriteLine($"Project Path: {projectPath}");
 #endif
         }
     }
