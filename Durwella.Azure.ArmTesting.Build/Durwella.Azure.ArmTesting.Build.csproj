@@ -23,5 +23,8 @@
     </ItemGroup>
     <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Publish" Properties="TargetFramework=%(_TargetFramework.Identity)" />
   </Target>
+  <ItemGroup>
+    <ProjectReference Include="..\Durwella.Azure.ArmTesting\Durwella.Azure.ArmTesting.csproj" />
+  </ItemGroup>
   
 </Project>
