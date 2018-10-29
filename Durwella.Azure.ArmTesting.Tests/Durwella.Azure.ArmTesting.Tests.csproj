@@ -7,6 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Examples\basic.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Examples\basic.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoFixture.AutoMoq" Version="4.5.0" />
     <PackageReference Include="AutoFixture.Xunit2" Version="4.5.0" />
     <PackageReference Include="FluentAssertions" Version="5.4.2" />

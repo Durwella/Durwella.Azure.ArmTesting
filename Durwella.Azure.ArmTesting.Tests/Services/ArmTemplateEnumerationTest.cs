@@ -10,7 +10,7 @@ namespace Durwella.Azure.ArmTesting.Tests.Services
 {
     public class ArmTemplateEnumerationTest
     {
-        [Theory(DisplayName = "Empty Proj"), AutoMoqData]
+        [Theory(DisplayName = "Empty csproj"), AutoMoqData]
         public void EmptyProject(ArmTemplateEnumeration subject)
         {
             var projectPath = Combine(GetTemporaryDirectory(), "Test.csproj");
@@ -20,13 +20,14 @@ namespace Durwella.Azure.ArmTesting.Tests.Services
                 .Should().BeEmpty();
         }
 
-        [Theory(DisplayName = "One AzureDeploy.json"), AutoMoqData]
+        [Theory(DisplayName = "1 AzureDeploy.json"), AutoMoqData]
         public void OneAzureDeployJson(ArmTemplateEnumeration subject)
         {
             var directory = GetTemporaryDirectory();
             var projectPath = Combine(directory, "Test.csproj");
             WriteAllText(projectPath, @"<Project Sdk=""Microsoft.NET.Sdk""></Project>");
             WriteAllText(Combine(directory, "main.cs"), "using System;");
+            WriteAllText(Combine(directory, "other.json"), "{}");
             var azureDeployPath = Combine(directory, "azuredeploy.json");
             WriteAllText(azureDeployPath, "{}");
 
@@ -34,7 +35,7 @@ namespace Durwella.Azure.ArmTesting.Tests.Services
                 .Should().Equal(azureDeployPath);
         }
 
-        [Theory(DisplayName = "Two AzureDeploy.json"), AutoMoqData]
+        [Theory(DisplayName = "2 AzureDeploy.json"), AutoMoqData]
         public void TwoAzureDeployJsonInSubdirectories(ArmTemplateEnumeration subject)
         {
             var directory = GetTemporaryDirectory();
@@ -52,6 +53,38 @@ namespace Durwella.Azure.ArmTesting.Tests.Services
             subject.EnumerateArmTemplatePaths(projectPath)
                 .Should().Equal(azureDeploy1, azureDeploy2);
         }
+
+        [Theory(DisplayName = "other.json"), AutoMoqData]
+        public void FindJsonFileWithSchema(ArmTemplateEnumeration subject)
+        {
+            var directory = GetTemporaryDirectory();
+            var projectPath = Combine(directory, "Test.csproj");
+            WriteAllText(projectPath, @"<Project Sdk=""Microsoft.NET.Sdk""></Project>");
+            WriteAllText(Combine(directory, "main.cs"), "using System;");
+            var armTemplatePath = Combine(directory, "other.json");
+            Copy(@"Examples\basic.json", armTemplatePath);
+
+            subject.EnumerateArmTemplatePaths(projectPath)
+                .Should().Equal(armTemplatePath);
+        }
+
+        [Theory(DisplayName = "/sub/other.json"), AutoMoqData]
+        public void FindJsonFileInSubdirectoryWithSchema(ArmTemplateEnumeration subject)
+        {
+            var directory = GetTemporaryDirectory();
+            var projectPath = Combine(directory, "Test.csproj");
+            WriteAllText(projectPath, @"<Project Sdk=""Microsoft.NET.Sdk""></Project>");
+            WriteAllText(Combine(directory, "project.json"), "{ }");
+            var subDir = Combine(directory, "sub");
+            Directory.CreateDirectory(subDir);
+            var armTemplatePath = Combine(subDir, "other.json");
+            Copy(@"Examples\basic.json", armTemplatePath);
+
+            subject.EnumerateArmTemplatePaths(projectPath)
+                .Should().Equal(armTemplatePath);
+        }
+
+        // TODO: Exclude bin, obj, .vs folders
 
     }
 }
