@@ -8,7 +8,18 @@ namespace Durwella.Azure.ArmTesting.Build
 
         static void Main(string[] args)
         {
+#if DEBUG
             Console.WriteLine("Hello from Durwella.Azure.ArmTesting.Build!");
+#endif
+            if (args.Length == 0)
+            {
+                Console.Error.WriteLine("Durwella.Azure.ArmTesting.Build requires a command line argument of the project directory.");
+                return;
+            }
+            var projectDirectory = args[0];
+#if DEBUG
+            Console.WriteLine($"Project Directory: {projectDirectory}");
+#endif
         }
     }
 }

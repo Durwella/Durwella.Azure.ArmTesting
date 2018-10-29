@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Durwella.Azure.ArmTesting.Build": {
+      "commandName": "Project",
+      "commandLineArgs": "$(ProjectDir)"
+    }
+  }
+}
