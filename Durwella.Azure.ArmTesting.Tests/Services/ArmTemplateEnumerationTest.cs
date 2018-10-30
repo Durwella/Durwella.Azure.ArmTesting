@@ -11,6 +11,8 @@ namespace Durwella.Azure.ArmTesting.Tests.Services
 {
     public class ArmTemplateEnumerationTest
     {
+        private static string BasicJsonPath => Combine("Examples", "basic.json");
+
         private static IEnumerable<string> EnumerateArmTemplatePaths(ArmTemplateEnumeration subject, string directory)
         {
             var projectPath = CreateProjectFile(directory);
@@ -64,7 +66,22 @@ namespace Durwella.Azure.ArmTesting.Tests.Services
             var directory = GetTemporaryDirectory();
             WriteAllText(Combine(directory, "main.cs"), "using System;");
             var armTemplatePath = Combine(directory, "other.json");
-            Copy(@"Examples\basic.json", armTemplatePath);
+            Copy(BasicJsonPath, armTemplatePath);
+
+            var armTemplatePaths = EnumerateArmTemplatePaths(subject, directory);
+
+            armTemplatePaths.Should().Equal(armTemplatePath);
+        }
+
+        [Theory(DisplayName = "https schema"), AutoMoqData]
+        public void FindJsonFileWithHttpsSchema(ArmTemplateEnumeration subject)
+        {
+            var directory = GetTemporaryDirectory();
+            WriteAllText(Combine(directory, "main.cs"), "using System;");
+            var armTemplatePath = Combine(directory, "other.json");
+            var json = ReadAllText(BasicJsonPath)
+                .Replace("http://", "https://");
+            WriteAllText(armTemplatePath, json);
 
             var armTemplatePaths = EnumerateArmTemplatePaths(subject, directory);
 
@@ -78,7 +95,7 @@ namespace Durwella.Azure.ArmTesting.Tests.Services
             WriteAllText(Combine(directory, "project.json"), "{ }");
             var subDir = CreateDirectory(directory, "sub");
             var armTemplatePath = Combine(subDir, "other.json");
-            Copy(@"Examples\basic.json", armTemplatePath);
+            Copy(BasicJsonPath, armTemplatePath);
 
             var armTemplatePaths = EnumerateArmTemplatePaths(subject, directory);
 
@@ -93,9 +110,9 @@ namespace Durwella.Azure.ArmTesting.Tests.Services
         {
             var directory = GetTemporaryDirectory();
             var bin = CreateDirectory(directory, binDir);
-            Copy(@"Examples\basic.json", Combine(bin, "azuredeploy.json"));
+            Copy(BasicJsonPath, Combine(bin, "azuredeploy.json"));
             var sub = CreateDirectory(bin, "sub");
-            Copy(@"Examples\basic.json", Combine(sub, "azuredeploy.json"));
+            Copy(BasicJsonPath, Combine(sub, "azuredeploy.json"));
 
             var armTemplatePaths = EnumerateArmTemplatePaths(subject, directory);
 

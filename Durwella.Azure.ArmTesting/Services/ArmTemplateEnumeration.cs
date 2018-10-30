@@ -19,9 +19,10 @@ namespace Durwella.Azure.ArmTesting.Services
 
         /// <summary>
         /// URL of the JSON schema file that describes the version of the ARM template language.
+        /// Could be http or https. Sometimes ends with #.
         /// https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-authoring-templates#template-format
         /// </summary>
-        const string TemplateJsonSchema = "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json";
+        const string TemplateJsonSchema = "//schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json";
 
         /// <summary>
         /// Subdirectories of the project directory that we should ignore when looking for ARM templates
