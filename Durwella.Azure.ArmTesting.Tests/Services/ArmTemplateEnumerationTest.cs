@@ -44,6 +44,21 @@ namespace Durwella.Azure.ArmTesting.Tests.Services
             armTemplatePaths.Should().Equal(azureDeployPath);
         }
 
+        [Theory(DisplayName = "1 AzureDeploy.json w/ schema"), AutoMoqData]
+        public void OneAzureDeployJsonWithBasicSchema(ArmTemplateEnumeration subject)
+        {
+            // This makes sure we don't double-count azuredeploy.json files w/ the expected content
+            var directory = GetTemporaryDirectory();
+            WriteAllText(Combine(directory, "main.cs"), "using System;");
+            WriteAllText(Combine(directory, "other.json"), "{}");
+            var azureDeployPath = Combine(directory, "azuredeploy.json");
+            Copy(BasicJsonPath, azureDeployPath);
+
+            var armTemplatePaths = EnumerateArmTemplatePaths(subject, directory);
+
+            armTemplatePaths.Should().Equal(azureDeployPath);
+        }
+
         [Theory(DisplayName = "2 AzureDeploy.json"), AutoMoqData]
         public void TwoAzureDeployJsonInSubdirectories(ArmTemplateEnumeration subject)
         {
