@@ -1,6 +1,7 @@
 ﻿using Durwella.Azure.ArmTesting.ServiceInterfaces;
 using Durwella.Azure.ArmTesting.Services;
 using SimpleInjector;
+using System.IO;
 using System.Linq;
 using static System.Console;
 
@@ -40,6 +41,14 @@ namespace Durwella.Azure.ArmTesting.Build
             foreach (var armTemplate in armTemplates)
             {
                 WriteLine($"  - {armTemplate}");
+                // HACK: Quick wire up of name checking
+                var nameChecking = new NameChecking();
+                var json = File.ReadAllText(armTemplate);
+                var errors = nameChecking.CheckResourceNames(json);
+                foreach (var error in errors)
+                {
+                    WriteLine(error);
+                }
             }
         }
     }

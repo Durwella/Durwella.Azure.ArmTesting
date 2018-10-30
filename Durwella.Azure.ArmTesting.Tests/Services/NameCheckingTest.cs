@@ -22,15 +22,43 @@ namespace Durwella.Azure.ArmTesting.Tests.Services
         [Theory(DisplayName = "Storage: long name"), AutoMoqData]
         public void StorageNameTooLong(NameChecking subject)
         {
+            var name = "verylongstoragenamelongerthan24chars";
             var json = ReadAllText(Combine("Examples", "storage-basic.json"))
-                .Replace("storagename", "verylongstoragenamelongerthan24chars");
+                .Replace("storagename", name);
 
             var errors = subject.CheckResourceNames(json);
 
             errors.Should().HaveCount(1);
             var error = errors.Single();
             error.LineNumber.Should().Be(8);
-            error.Message.Should().Contain("too long");
+            error.Message.Should().Contain($"'{name}' is too long");
+        }
+
+        [Theory(DisplayName = "Storage: short name"), AutoMoqData]
+        public void StorageNameTooShort(NameChecking subject)
+        {
+            var name = "a1";
+            var json = ReadAllText(Combine("Examples", "storage-basic.json"))
+                .Replace("storagename", name);
+
+            var errors = subject.CheckResourceNames(json);
+
+            errors.Should().HaveCount(1);
+            var error = errors.Single();
+            error.LineNumber.Should().Be(8);
+            error.Message.Should().Contain($"'{name}' is too short");
+        }
+
+        [Theory(DisplayName = "Storage: ok"), AutoMoqData]
+        public void StorageNameOk(NameChecking subject)
+        {
+            var name = "abc";
+            var json = ReadAllText(Combine("Examples", "storage-basic.json"))
+                .Replace("storagename", name);
+
+            var errors = subject.CheckResourceNames(json);
+
+            errors.Should().BeEmpty();
         }
     }
 }

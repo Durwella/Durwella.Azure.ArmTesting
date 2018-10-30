@@ -16,9 +16,19 @@ namespace Durwella.Azure.ArmTesting.Services
             var resources = root["resources"];
             foreach (var resource in resources)
             {
-                var name = resource["name"];
-                var lineInfo = (IJsonLineInfo)name;
-                yield return new ArmTemplateError(null, lineInfo.LineNumber, "The name is too long");
+                var nameToken = resource["name"];
+                var lineInfo = (IJsonLineInfo)nameToken;
+                var name = nameToken.Value<string>();
+                if (name.Length < 3)                
+                    yield return new ArmTemplateError(
+                        lineInfo,
+                        $"The name '{name}' is too short. " +
+                        "Storage account name must be between 3 and 24 characters in length.");
+                else if (name.Length > 24)
+                    yield return new ArmTemplateError(
+                        lineInfo,
+                        $"The name '{name}' is too long. " +
+                        "Storage account name must be between 3 and 24 characters in length.");
             }
 
 
