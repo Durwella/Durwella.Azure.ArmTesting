@@ -13,7 +13,7 @@ namespace Durwella.Azure.ArmTesting.Tests.Services
         public void BasicTemplateNoErrors(NameChecking subject)
         {
             var json = ReadAllText(Combine("Examples", "basic.json"));
-            var errors = subject.CheckResourceNames(json);
+            var errors = subject.CheckTemplate(json);
             errors.Should().BeEmpty();
         }
 
@@ -26,7 +26,7 @@ namespace Durwella.Azure.ArmTesting.Tests.Services
             var json = ReadAllText(Combine("Examples", "storage-basic.json"))
                 .Replace("storagename", name);
 
-            var errors = subject.CheckResourceNames(json);
+            var errors = subject.CheckTemplate(json);
 
             errors.Should().HaveCount(1);
             var error = errors.Single();
@@ -41,7 +41,7 @@ namespace Durwella.Azure.ArmTesting.Tests.Services
             var json = ReadAllText(Combine("Examples", "storage-basic.json"))
                 .Replace("storagename", name);
 
-            var errors = subject.CheckResourceNames(json);
+            var errors = subject.CheckTemplate(json);
 
             errors.Should().HaveCount(1);
             var error = errors.Single();
@@ -49,14 +49,29 @@ namespace Durwella.Azure.ArmTesting.Tests.Services
             error.Message.Should().Contain($"'{name}' is too short");
         }
 
-        [Theory(DisplayName = "Storage: ok"), AutoMoqData]
-        public void StorageNameOk(NameChecking subject)
+        [Theory(DisplayName = "Storage: ok")]
+        [InlineAutoMoqData("abc")]
+        [InlineAutoMoqData("a1234567890")]
+        [InlineAutoMoqData("a12345678901234567890bc")]
+        [InlineAutoMoqData("[concat(uniquestring(resourceGroup().id), 'standardsa')]")] // Ignoring function calls currently
+        public void StorageNameOk(string name, NameChecking subject)
         {
-            var name = "abc";
             var json = ReadAllText(Combine("Examples", "storage-basic.json"))
                 .Replace("storagename", name);
 
-            var errors = subject.CheckResourceNames(json);
+            var errors = subject.CheckTemplate(json);
+
+            errors.Should().BeEmpty();
+        }
+
+        [Theory(DisplayName = "Other type: ok"), AutoMoqData]
+        public void IgnoreLongNameUnknownResourceType(NameChecking subject)
+        {
+            var json = ReadAllText(Combine("Examples", "storage-basic.json"))
+                .Replace("storagename", "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz")
+                .Replace("Microsoft.Storage/storageAccounts", "Durwella.Cloud/Unknown");
+
+            var errors = subject.CheckTemplate(json);
 
             errors.Should().BeEmpty();
         }

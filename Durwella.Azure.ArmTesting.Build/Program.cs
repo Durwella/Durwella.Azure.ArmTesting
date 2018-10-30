@@ -44,10 +44,10 @@ namespace Durwella.Azure.ArmTesting.Build
                 // HACK: Quick wire up of name checking
                 var nameChecking = new NameChecking();
                 var json = File.ReadAllText(armTemplate);
-                var errors = nameChecking.CheckResourceNames(json);
+                var errors = nameChecking.CheckTemplate(json)
+                    .Select(e => new ArmTemplateError(armTemplate, e));
                 foreach (var error in errors)
                 {
-                    error.Path = armTemplate;
                     WriteLine(error);
                 }
             }

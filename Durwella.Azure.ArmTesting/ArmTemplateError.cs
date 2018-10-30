@@ -1,27 +1,53 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Durwella.Azure.ArmTesting
 {
-    public class ArmTemplateError
+    public class TokenError
     {
-        public string Path { get; set; }
         public int LineNumber { get; set; }
         public int ColumnNumber { get; set; }
         public string Message { get; set; }
 
-        public ArmTemplateError()
-        {
-        }
-
-        public ArmTemplateError(int lineNumber, int columnNumber, string message)
+        public TokenError(int lineNumber, int columnNumber, string message)
         {
             LineNumber = lineNumber;
             ColumnNumber = columnNumber;
             Message = message;
         }
 
-        internal ArmTemplateError(IJsonLineInfo lineInfo, string message)
+        public TokenError(JToken jToken, string message)
+            : this((IJsonLineInfo)jToken, message)
+        {
+        }
+
+        public TokenError(IJsonLineInfo lineInfo, string message)
             : this(lineInfo.LineNumber, lineInfo.LinePosition, message)
+        {
+        }
+    }
+
+    public class ArmTemplateError
+    {
+        public string Path { get; }
+        public int LineNumber { get; }
+        public int ColumnNumber { get; }
+        public string Message { get; }
+
+        public ArmTemplateError()
+        {
+        }
+
+        public ArmTemplateError(string path, int lineNumber, int columnNumber, string message)
+        {
+            Path = path;
+            LineNumber = lineNumber;
+            ColumnNumber = columnNumber;
+            Message = message;
+        }
+
+        public ArmTemplateError(string path, TokenError tokenError)
+            : this(path, tokenError.LineNumber, tokenError.ColumnNumber, tokenError.Message)
         {
         }
 

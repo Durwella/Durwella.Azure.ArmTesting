@@ -7,6 +7,17 @@
     "comment": "Azure QuickStarts"
   },
   "resources": [
+    {
+      "name": "storagename",
+      "type": "Microsoft.Storage/storageAccounts",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-01-01",
+      "sku": {
+        "name": "Standard_LRS"
+      },
+      "dependsOn": [],
+      "kind": "Storage"
+    }
   ],
   "outputs": {
   }
