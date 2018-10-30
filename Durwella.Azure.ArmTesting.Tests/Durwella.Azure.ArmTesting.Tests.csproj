@@ -8,10 +8,14 @@
 
   <ItemGroup>
     <None Remove="Examples\basic.json" />
+    <None Remove="Examples\storage-basic.json" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Examples\basic.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Examples\storage-basic.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
