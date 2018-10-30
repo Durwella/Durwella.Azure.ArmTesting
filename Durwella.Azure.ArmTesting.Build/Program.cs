@@ -47,6 +47,7 @@ namespace Durwella.Azure.ArmTesting.Build
                 var errors = nameChecking.CheckResourceNames(json);
                 foreach (var error in errors)
                 {
+                    error.Path = armTemplate;
                     WriteLine(error);
                 }
             }

@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Durwella.Azure.ArmTesting.Build" Version="1.0.12" />
+    <PackageReference Include="Durwella.Azure.ArmTesting.Build" Version="1.0.13" />
   </ItemGroup>
 
 </Project>
