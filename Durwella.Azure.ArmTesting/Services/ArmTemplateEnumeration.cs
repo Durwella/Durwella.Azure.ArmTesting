@@ -25,7 +25,7 @@ namespace Durwella.Azure.ArmTesting.Services
 
         private readonly IProjectFileEnumeration _projectFileEnumeration;
 
-        public ArmTemplateEnumeration(FileSystemProjectEnumeration projectFileEnumeration)
+        public ArmTemplateEnumeration(IProjectFileEnumeration projectFileEnumeration)
         {
             _projectFileEnumeration = projectFileEnumeration;
         }

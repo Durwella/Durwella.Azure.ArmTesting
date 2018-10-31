@@ -1,5 +1,8 @@
-﻿using Durwella.Azure.ArmTesting.Services;
+﻿using AutoFixture.Xunit2;
+using Durwella.Azure.ArmTesting.ServiceInterfaces;
+using Durwella.Azure.ArmTesting.Services;
 using FluentAssertions;
+using Moq;
 using System.Collections.Generic;
 using System.IO;
 using Xunit;
@@ -13,125 +16,125 @@ namespace Durwella.Azure.ArmTesting.Tests.Services
     {
         private static string BasicJsonPath => Combine("Examples", "basic.json");
 
-        private static IEnumerable<string> EnumerateArmTemplatePaths(ArmTemplateEnumeration subject, string directory)
-        {
-            var projectPath = CreateProjectFile(directory);
-            // Act
-            return subject.EnumerateArmTemplatePaths(projectPath);
-        }
-
         [Theory(DisplayName = "Empty csproj"), AutoMoqData]
-        public void EmptyProject(ArmTemplateEnumeration subject)
+        public void EmptyProject(
+            string projectPath,
+            [Frozen]Mock<IProjectFileEnumeration> projectFileEnumeration,
+            ArmTemplateEnumeration subject)
         {
-            var directory = GetTemporaryDirectory();
+            projectFileEnumeration.Setup(x => x.EnumerateProjectFiles(projectPath))
+                .Returns(new List<string>());
 
-            var armTemplatePaths = EnumerateArmTemplatePaths(subject, directory);
+            var armTemplatePaths = subject.EnumerateArmTemplatePaths(projectPath);
 
             armTemplatePaths.Should().BeEmpty();
         }
 
         [Theory(DisplayName = "1 AzureDeploy.json"), AutoMoqData]
-        public void OneAzureDeployJson(ArmTemplateEnumeration subject)
+        public void OneAzureDeployJson(
+            string projectPath,
+            [Frozen]Mock<IProjectFileEnumeration> projectFileEnumeration,
+            ArmTemplateEnumeration subject)
         {
             var directory = GetTemporaryDirectory();
-            WriteAllText(Combine(directory, "main.cs"), "using System;");
-            WriteAllText(Combine(directory, "other.json"), "{}");
-            var azureDeployPath = Combine(directory, "azuredeploy.json");
-            WriteAllText(azureDeployPath, "{}");
+            var main = Write(directory, "main.cs", "using System;");
+            var other = Write(directory, "other.json", "{}");
+            var azureDeployPath = Write(directory, "azuredeploy.json", "{}");
+            projectFileEnumeration.Setup(x => x.EnumerateProjectFiles(projectPath))
+                .Returns(new[] { main, other, azureDeployPath });
 
-            var armTemplatePaths = EnumerateArmTemplatePaths(subject, directory);
+            var armTemplatePaths = subject.EnumerateArmTemplatePaths(projectPath);
 
             armTemplatePaths.Should().Equal(azureDeployPath);
         }
 
         [Theory(DisplayName = "1 AzureDeploy.json w/ schema"), AutoMoqData]
-        public void OneAzureDeployJsonWithBasicSchema(ArmTemplateEnumeration subject)
+        public void OneAzureDeployJsonWithBasicSchema(
+            string projectPath,
+            [Frozen]Mock<IProjectFileEnumeration> projectFileEnumeration,
+            ArmTemplateEnumeration subject)
         {
             // This makes sure we don't double-count azuredeploy.json files w/ the expected content
             var directory = GetTemporaryDirectory();
-            WriteAllText(Combine(directory, "main.cs"), "using System;");
-            WriteAllText(Combine(directory, "other.json"), "{}");
+            var other = Write(directory, "other.json", "{}");
             var azureDeployPath = Combine(directory, "azuredeploy.json");
             Copy(BasicJsonPath, azureDeployPath);
+            projectFileEnumeration.Setup(x => x.EnumerateProjectFiles(projectPath))
+                .Returns(new[] { other, azureDeployPath });
 
-            var armTemplatePaths = EnumerateArmTemplatePaths(subject, directory);
+            var armTemplatePaths = subject.EnumerateArmTemplatePaths(projectPath);
 
             armTemplatePaths.Should().Equal(azureDeployPath);
         }
 
         [Theory(DisplayName = "2 AzureDeploy.json"), AutoMoqData]
-        public void TwoAzureDeployJsonInSubdirectories(ArmTemplateEnumeration subject)
+        public void TwoAzureDeployJsonInSubdirectories(
+            string projectPath,
+            [Frozen]Mock<IProjectFileEnumeration> projectFileEnumeration,
+            ArmTemplateEnumeration subject)
         {
+            // Ensure case is ignored and subdirectories used
             var directory = GetTemporaryDirectory();
-            var subDir1 = CreateDirectory(directory, "sub1");
-            var azureDeploy1 = Combine(subDir1, "AzureDeploy.json");
-            WriteAllText(azureDeploy1, "{}");
-            var subDir2 = CreateDirectory(directory, "sub2");
-            var azureDeploy2 = Combine(subDir2, "AZUREDEPLOY.JSON");
-            WriteAllText(azureDeploy2, "{}");
+            var azureDeploy1 = Write(directory, "sub1", "AzureDeploy.json", "{}");
+            var azureDeploy2 = Write(directory, "sub1", "AZUREDEPLOY.JSON", "{}");
+            projectFileEnumeration.Setup(x => x.EnumerateProjectFiles(projectPath))
+                .Returns(new[] { azureDeploy1, azureDeploy2 });
 
-            var armTemplatePaths = EnumerateArmTemplatePaths(subject, directory);
+            var armTemplatePaths = subject.EnumerateArmTemplatePaths(projectPath);
 
             armTemplatePaths.Should().Equal(azureDeploy1, azureDeploy2);
         }
 
         [Theory(DisplayName = "other.json"), AutoMoqData]
-        public void FindJsonFileWithSchema(ArmTemplateEnumeration subject)
+        public void FindJsonFileWithSchema(
+            string projectPath,
+            [Frozen]Mock<IProjectFileEnumeration> projectFileEnumeration,
+            ArmTemplateEnumeration subject)
         {
             var directory = GetTemporaryDirectory();
-            WriteAllText(Combine(directory, "main.cs"), "using System;");
+            var main = Write(directory, "main.cs", "using System;");
             var armTemplatePath = Combine(directory, "other.json");
             Copy(BasicJsonPath, armTemplatePath);
+            projectFileEnumeration.Setup(x => x.EnumerateProjectFiles(projectPath))
+                .Returns(new[] { main, armTemplatePath });
 
-            var armTemplatePaths = EnumerateArmTemplatePaths(subject, directory);
+            var armTemplatePaths = subject.EnumerateArmTemplatePaths(projectPath);
 
             armTemplatePaths.Should().Equal(armTemplatePath);
         }
 
         [Theory(DisplayName = "https schema"), AutoMoqData]
-        public void FindJsonFileWithHttpsSchema(ArmTemplateEnumeration subject)
+        public void FindJsonFileWithHttpsSchema(
+            string projectPath,
+            [Frozen]Mock<IProjectFileEnumeration> projectFileEnumeration,
+            ArmTemplateEnumeration subject)
         {
             var directory = GetTemporaryDirectory();
-            WriteAllText(Combine(directory, "main.cs"), "using System;");
-            var armTemplatePath = Combine(directory, "other.json");
+            var main = Write(directory, "main.cs", "using System;");
             var json = ReadAllText(BasicJsonPath)
                 .Replace("http://", "https://");
-            WriteAllText(armTemplatePath, json);
+            var armTemplatePath = Write(directory, "other.json", json);
+            projectFileEnumeration.Setup(x => x.EnumerateProjectFiles(projectPath))
+                .Returns(new[] { main, armTemplatePath });
 
-            var armTemplatePaths = EnumerateArmTemplatePaths(subject, directory);
-
-            armTemplatePaths.Should().Equal(armTemplatePath);
-        }
-
-        [Theory(DisplayName = "/sub/other.json"), AutoMoqData]
-        public void FindJsonFileInSubdirectoryWithSchema(ArmTemplateEnumeration subject)
-        {
-            var directory = GetTemporaryDirectory();
-            WriteAllText(Combine(directory, "project.json"), "{ }");
-            var subDir = CreateDirectory(directory, "sub");
-            var armTemplatePath = Combine(subDir, "other.json");
-            Copy(BasicJsonPath, armTemplatePath);
-
-            var armTemplatePaths = EnumerateArmTemplatePaths(subject, directory);
+            var armTemplatePaths = subject.EnumerateArmTemplatePaths(projectPath);
 
             armTemplatePaths.Should().Equal(armTemplatePath);
         }
 
-        [Theory(DisplayName = "Not /bin/...")]
-        [InlineAutoMoqData("bin")]
-        [InlineAutoMoqData("obj")]
-        [InlineAutoMoqData(".vs")]
-        public void IgnoreBinDirectory(string binDir, ArmTemplateEnumeration subject)
+        private static string Write(string directory, string name, string content)
         {
-            var directory = GetTemporaryDirectory();
-            var bin = CreateDirectory(directory, binDir);
-            Copy(BasicJsonPath, Combine(bin, "azuredeploy.json"));
-            var sub = CreateDirectory(bin, "sub");
-            Copy(BasicJsonPath, Combine(sub, "azuredeploy.json"));
+            var filePath = Combine(directory, name);
+            WriteAllText(filePath, content);
+            return filePath;
+        }
 
-            var armTemplatePaths = EnumerateArmTemplatePaths(subject, directory);
-
-            armTemplatePaths.Should().BeEmpty();
+        private static string Write(string directory, string subdirectory, string name, string content)
+        {
+            directory = CreateDirectory(directory, subdirectory);
+            var filePath = Combine(directory, name);
+            WriteAllText(filePath, content);
+            return filePath;
         }
 
         private static string CreateProjectFile(string directory)

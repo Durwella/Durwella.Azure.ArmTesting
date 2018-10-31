@@ -5,8 +5,17 @@
     <ArmTestingCommand Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">"$(MSBuildThisFileDirectory)../net46/Durwella.Azure.ArmTesting.Build.exe"</ArmTestingCommand>
     <ArmTestingCommand Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp' OR '$(TargetFrameworkIdentifier)' == '.NETStandard'">dotnet "$(MSBuildThisFileDirectory)../netcoreapp2.1/Durwella.Azure.ArmTesting.Build.dll"</ArmTestingCommand>
   </PropertyGroup>
-
-  <Target Name="MyBuildTarget" AfterTargets="CoreCompile">
+  <!-- 
+  We MUST avoid a build recursion in BuildalyzerProjectEnumeration calling
+  when analyzer.Build().
+  So here we try to disable this build target if the build is a Design Time build.
+  We also set the prior target to AfterBuild because it is possible to conflict
+  with the generation of binaries. 
+  https://github.com/dotnet/project-system/blob/master/docs/design-time-builds.md 
+  -->
+  <Target Name="DurwellaAzureArmTestingTarget" 
+          AfterTargets="AfterBuild" 
+          Condition="'$(_DRWLA_ARM_BUILD)'=='' AND '$(DesignTimeBuild)'==''">
     <Exec Command="$(ArmTestingCommand) &quot;$(MSBuildProjectFullPath)&quot;" />
   </Target>
 </Project>

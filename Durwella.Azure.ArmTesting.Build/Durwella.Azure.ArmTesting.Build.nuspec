@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>Durwella.Azure.ArmTesting.Build</id>
-    <version>1.0.20</version>
+    <version>1.0.25</version>
     <authors>jfoshee,jfoshee_durwella,durwella</authors>
     <description>Checks AzureDeploy.json for some basic errors</description>
     <projectUrl>https://github.com/Durwella/Durwella.Azure.ArmTesting</projectUrl>

@@ -15,6 +15,7 @@ namespace Durwella.Azure.ArmTesting.Build
         {
             _container = new Container();
             _container.Register<IArmTemplateEnumeration, ArmTemplateEnumeration>();
+            _container.Register<IProjectFileEnumeration, BuildalyzerProjectEnumeration>();
         }
 
         static void Main(string[] args)
