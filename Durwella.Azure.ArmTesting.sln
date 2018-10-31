@@ -16,11 +16,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Durwella.Azure.ArmTesting.Build.PackageTest.Net46", "Durwella.Azure.ArmTesting.Build.PackageTest.Net46\Durwella.Azure.ArmTesting.Build.PackageTest.Net46.csproj", "{E1D7ECF8-94F7-479E-9786-7CB9DFC80F53}"
-	ProjectSection(ProjectDependencies) = postProject
-		{B187598F-8A07-4211-837B-B67A6FA7B0E1} = {B187598F-8A07-4211-837B-B67A6FA7B0E1}
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Durwella.Azure.ArmTesting", "Durwella.Azure.ArmTesting\Durwella.Azure.ArmTesting.csproj", "{B3D9963D-E64B-4C8F-8F59-73C07F245C05}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Durwella.Azure.ArmTesting.Tests", "Durwella.Azure.ArmTesting.Tests\Durwella.Azure.ArmTesting.Tests.csproj", "{875243D1-67D5-438C-BF33-0BF2F62696EF}"
@@ -39,10 +34,6 @@ Global
 		{CE2749C5-BA6F-42D8-A237-31B2372DFABD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE2749C5-BA6F-42D8-A237-31B2372DFABD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE2749C5-BA6F-42D8-A237-31B2372DFABD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E1D7ECF8-94F7-479E-9786-7CB9DFC80F53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E1D7ECF8-94F7-479E-9786-7CB9DFC80F53}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E1D7ECF8-94F7-479E-9786-7CB9DFC80F53}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E1D7ECF8-94F7-479E-9786-7CB9DFC80F53}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B3D9963D-E64B-4C8F-8F59-73C07F245C05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B3D9963D-E64B-4C8F-8F59-73C07F245C05}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3D9963D-E64B-4C8F-8F59-73C07F245C05}.Release|Any CPU.ActiveCfg = Release|Any CPU

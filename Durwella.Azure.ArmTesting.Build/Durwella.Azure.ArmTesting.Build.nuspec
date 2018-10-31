@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>Durwella.Azure.ArmTesting.Build</id>
-    <version>1.0.19</version>
+    <version>1.0.20</version>
     <authors>jfoshee,jfoshee_durwella,durwella</authors>
     <description>Checks AzureDeploy.json for some basic errors</description>
     <projectUrl>https://github.com/Durwella/Durwella.Azure.ArmTesting</projectUrl>
@@ -10,9 +10,13 @@
     <tags>azure resource management arm template</tags>
   </metadata>
   <files>
+    <!-- To support net46, need to break dependence on Buildalyzer -->
+    <!--
     <file src="Durwella.Azure.ArmTesting.Build.targets" target="build/netstandard1.0/Durwella.Azure.ArmTesting.Build.targets" />
     <file src="Durwella.Azure.ArmTesting.Build.targets" target="build/net45/Durwella.Azure.ArmTesting.Build.targets" />
     <file src="$publishdir$\net46\**\*" target="build/net46/" />
+    -->
+    <file src="Durwella.Azure.ArmTesting.Build.targets" target="build/netstandard2.0/Durwella.Azure.ArmTesting.Build.targets" />
     <file src="$publishdir$\netcoreapp2.1\**\*" target="build/netcoreapp2.1/" />
   </files>
 </package>
