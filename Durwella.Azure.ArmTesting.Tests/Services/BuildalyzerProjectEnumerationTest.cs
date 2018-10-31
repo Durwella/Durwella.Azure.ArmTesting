@@ -87,6 +87,23 @@ namespace Durwella.Azure.ArmTesting.Tests.Services
             filePaths.Should().BeEmpty();
         }
 
+        [Theory(DisplayName = "../embedded.json"), AutoMoqData]
+        public void EmbeddedAndLinkedFile(BuildalyzerProjectEnumeration subject)
+        {
+            var otherDirectory = GetTemporaryDirectory();
+            var otherDirName = Path.GetFileName(otherDirectory);
+            var filePath = Create(otherDirectory, "sample.json");
+            var directory = GetTemporaryDirectory();
+            var link = $"<EmbeddedResource " +
+                $" Include=\"..\\{otherDirName}\\sample.json\" " +
+                $" Link=\"FakeDirectory\\sample.json\" />";
+            var projectPath = CreateProjectFile(directory, link);
+
+            var filePaths = subject.EnumerateProjectFiles(projectPath);
+
+            filePaths.Should().Equal(filePath);
+        }
+
         private static string Create(string directory, string name)
         {
             var filePath = Combine(directory, name);
@@ -102,10 +119,13 @@ namespace Durwella.Azure.ArmTesting.Tests.Services
             return filePath;
         }
 
-        private static string CreateProjectFile(string directory)
+        private static string CreateProjectFile(string directory, string content = "")
         {
             var projectPath = Combine(directory, "Test.csproj");
-            WriteAllText(projectPath, @"<Project Sdk=""Microsoft.NET.Sdk""></Project>");
+            WriteAllText(projectPath,
+                $"<Project Sdk=\"Microsoft.NET.Sdk\">" +
+                $"  <ItemGroup>{content}</ItemGroup>" +
+                $"</Project>");
             return projectPath;
         }
     }

@@ -15,7 +15,14 @@ namespace Durwella.Azure.ArmTesting.Services
         {
             var relativePaths = EnumerateProjectFilesRelative(projectPath);
             var directory = Path.GetDirectoryName(projectPath);
-            return relativePaths.Select(relativePath => Path.Combine(directory, relativePath));
+            return relativePaths.Select(relativePath =>
+                FullPath(relativePath, directory));
+        }
+
+        private static string FullPath(string relativePath, string directory)
+        {
+            return Path.GetFullPath(
+                Path.Combine(directory, relativePath));
         }
 
         public IEnumerable<string> EnumerateProjectFilesRelative(string projectPath)
