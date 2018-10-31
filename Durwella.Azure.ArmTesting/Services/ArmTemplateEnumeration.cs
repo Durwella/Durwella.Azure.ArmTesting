@@ -36,25 +36,29 @@ namespace Durwella.Azure.ArmTesting.Services
         public IEnumerable<string> EnumerateArmTemplatePaths(string projectPath)
         {
             var jsonFiles = _projectFileEnumeration.EnumerateProjectFiles(projectPath)
-                .Where(path => Path.GetExtension(path) == ".json");
-            foreach (var path in jsonFiles)
+                .Where(path => Path.GetExtension(path).ToLower() == ".json");
+            return jsonFiles
+                .Where(path => HasConventionalName(path) || ReferencesArmSchema(path));
+        }
+
+        /// <summary>
+        /// Return true if named according to conventional name: azuredeploy.json
+        /// </summary>
+        private static bool HasConventionalName(string path)
+        {
+            return Path.GetFileName(path).Equals(AzureDeployJson, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Look for $schema reference that matches ARM template schema
+        /// </summary>
+        private static bool ReferencesArmSchema(string path)
+        {
+            // HACK: Peeking at first two lines to check for ARM schema URL
+            using (var reader = new StreamReader(File.OpenRead(path)))
             {
-                // If it is named according to convention, assume it is an ARM template
-                if (Path.GetFileName(path).Equals(AzureDeployJson, StringComparison.OrdinalIgnoreCase))
-                {
-                    yield return path;
-                    continue;
-                }
-                // HACK: Peeking at first two lines to check for ARM schema URL
-                using (var reader = new StreamReader(File.OpenRead(path)))
-                {
-                    var text = reader.ReadLine() + reader.ReadLine();
-                    if (text.Contains(TemplateJsonSchema))
-                    {
-                        yield return path;
-                        continue;
-                    }
-                }
+                var text = reader.ReadLine() + reader.ReadLine();
+                return text.Contains(TemplateJsonSchema);
             }
         }
     }

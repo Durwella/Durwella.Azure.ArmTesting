@@ -67,7 +67,7 @@ namespace Durwella.Azure.ArmTesting.Tests.Services
             var azureDeploy1 = Combine(subDir1, "AzureDeploy.json");
             WriteAllText(azureDeploy1, "{}");
             var subDir2 = CreateDirectory(directory, "sub2");
-            var azureDeploy2 = Combine(subDir2, "AzureDeploy.json");
+            var azureDeploy2 = Combine(subDir2, "AZUREDEPLOY.JSON");
             WriteAllText(azureDeploy2, "{}");
 
             var armTemplatePaths = EnumerateArmTemplatePaths(subject, directory);
