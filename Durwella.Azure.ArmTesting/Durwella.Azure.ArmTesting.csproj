@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Buildalyzer" Version="2.1.0" />
+    <PackageReference Include="Jint" Version="2.11.58" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
 
