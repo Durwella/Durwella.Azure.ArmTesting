@@ -1,0 +1,4 @@
+{
+    // https://marketplace.visualstudio.com/items?itemName=formulahendry.dotnet-test-explorer
+    "dotnet-test-explorer.testProjectPath": "**/*Tests.csproj"
+}
