@@ -9,7 +9,7 @@ namespace Durwella.Azure.ArmTesting.Tests.Services
         [Theory(DisplayName = "array()")]
         [InlineAutoMoqData("1", "[1]")]
         [InlineAutoMoqData("'efgh'", "['efgh']")]
-        [InlineAutoMoqData("{a: 'b', c: 'd'}", "[{a: 'b', c: 'd'}]")]
+        [InlineAutoMoqData("{a: 'b', c: 'd'}", "[{'a':'b','c':'d'}]")]
         public void ArrayFunction(string argument, string expected, JintFunctionEvaluation subject)
         {
             var expression = $"[array({argument})]";
@@ -20,9 +20,9 @@ namespace Durwella.Azure.ArmTesting.Tests.Services
         }
 
         [Theory(DisplayName = "concat()")]
-        [InlineAutoMoqData("'a', 'b', 'c'", "abc")]
-        [InlineAutoMoqData("'el', 'ep', 'ha', 'nt'", "elephant")]
-        [InlineAutoMoqData("'vm', 2", "vm2")]
+        [InlineAutoMoqData("'a', 'b', 'c'", "'abc'")]
+        [InlineAutoMoqData("'el', 'ep', 'ha', 'nt'", "'elephant'")]
+        [InlineAutoMoqData("'vm', 2", "'vm2'")]
         public void ConcatFunction(string concatArgs, string expected, JintFunctionEvaluation subject)
         {
             var expression = $"[concat({concatArgs})]";
