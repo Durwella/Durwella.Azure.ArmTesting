@@ -1,6 +1,7 @@
 ﻿using Jint;
 using Jint.Native;
 using Jint.Runtime;
+using Newtonsoft.Json.Linq;
 
 namespace Durwella.Azure.ArmTesting.Services
 {
@@ -28,13 +29,19 @@ namespace Durwella.Azure.ArmTesting.Services
                 // Call JSON.stringify
                 JsValue json = engine.Json.Stringify(engine.Json, Arguments.From(result));
                 // Convert to a string
-                var str = TypeConverter.ToString(json);
-                // HACK: Use single-quotes for strings (this is too dumb)
-                str = str.Replace('\"', '\'');
-                return str;
+                return TypeConverter.ToString(json);
             }
             // TODO: Handle null, undefined, exceptions...
             return "null";
+        }
+
+        public string EvaluateAndReplaceFunctions(string armTemplate)
+        {
+            var root = JObject.Parse(armTemplate);
+            var expression = root["resources"][0]["name"].ToString();
+            var result = Evaluate(expression);
+            var output = armTemplate.Replace('"' + expression + '"', result);
+            return output;
         }
     }
 }
