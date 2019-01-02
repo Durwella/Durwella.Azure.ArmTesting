@@ -8,12 +8,20 @@
 
   <ItemGroup>
     <None Remove="Examples\basic.json" />
+    <None Remove="Examples\multiple-function-evalutations.json" />
     <None Remove="Examples\storage-basic.json" />
     <None Remove="Examples\storage-concat-name.json" />
+    <None Remove="Examples\storage-variable-name.json" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Examples\basic.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Examples\multiple-function-evalutations.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Examples\storage-variable-name.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Examples\storage-concat-name.json">

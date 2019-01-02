@@ -1,6 +1,5 @@
 ﻿using Durwella.Azure.ArmTesting.Services;
 using FluentAssertions;
-using Newtonsoft.Json.Linq;
 using System.IO;
 using Xunit;
 
@@ -48,6 +47,18 @@ namespace Durwella.Azure.ArmTesting.Tests.Services
             nameChecking.CheckTemplate(output).Should().BeEmpty();
         }
 
-        // TODO: Don't evaluage `[[...]]`, but convert to `[`
+        [Theory(DisplayName = "variable name"), AutoMoqData]
+        public void VariableFunctionIntegration(JintFunctionEvaluation subject, NameChecking nameChecking)
+        {
+            var path = Path.Combine("Examples", "storage-variable-name.json");
+            var text = File.ReadAllText(path);
+
+            var output = subject.EvaluateAndReplaceFunctions(text);
+
+            output.Should().Contain("\"name\": \"my_storage\",");
+            nameChecking.CheckTemplate(output).Should().BeEmpty();
+        }
+
+        // TODO: Don't evaluate `[[...]]`, but convert to `[`
     }
 }
