@@ -1,5 +1,6 @@
 ﻿using Durwella.Azure.ArmTesting.Services;
 using FluentAssertions;
+using System.Collections.Generic;
 using System.IO;
 using Xunit;
 
@@ -58,6 +59,39 @@ namespace Durwella.Azure.ArmTesting.Tests.Services
             output.Should().Contain("\"name\": \"my_storage\",");
             nameChecking.CheckTemplate(output).Should().BeEmpty();
         }
+
+        [Theory(DisplayName = "variable evaluation"), AutoMoqData]
+        public void VariableEvaluation(JintFunctionEvaluation subject)
+        {
+            var variables = new Dictionary<string, string>
+            {
+                { "var1", "[concat('cl', 'ou', 'd')]" }
+            };
+            var expression = $"[variables('var1')]";
+
+            var output = subject.Evaluate(expression, variables);
+
+            output.Should().Be("\"cloud\"");
+        }
+
+        [Theory(DisplayName = "variable from other variable"), AutoMoqData]
+        public void VariableEvaluationOtherVariable(JintFunctionEvaluation subject)
+        {
+            var variables = new Dictionary<string, string>
+            {
+                { "var1", "[concat('cl', 'ou', 'd')]" },
+                { "var2", "[concat(variables('var1'), '9')]" },
+            };
+            var expression = $"[variables('var2')]";
+
+            var output = subject.Evaluate(expression, variables);
+
+            output.Should().Be("\"cloud9\"");
+        }
+
+
+
+        // TODO: Variable objects
 
         // TODO: Don't evaluate `[[...]]`, but convert to `[`
     }

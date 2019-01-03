@@ -10,10 +10,21 @@ namespace Durwella.Azure.ArmTesting.Services
     {
         public string Evaluate(string armFunctionExpression, Dictionary<string, string> variables = null)
         {
+            if (!armFunctionExpression.StartsWith("[") || !armFunctionExpression.EndsWith("]"))
+                return armFunctionExpression;
+            // Evaluate variables first as they may include expressions (and reference prior variables)
+            variables = variables ?? new Dictionary<string, string>();
+            var variablesEvaluated = new Dictionary<string, string>();
+            foreach (var variable in variables)
+            {
+                var value = Evaluate(variable.Value, variablesEvaluated);
+                // HACK: Remove quotes wrapping string result in this case... Somewhat inconsistent w/ the general case.
+                value = value.TrimStart('"').TrimEnd('"');
+                variablesEvaluated.Add(variable.Key, value);
+            }
             var engine = new Engine();
             // Set up the variables function to look up into given dictionary
-            variables = variables ?? new Dictionary<string, string>();
-            engine.SetValue("_variables", variables);
+            engine.SetValue("_variables", variablesEvaluated);
             engine.Execute(@"
                 function variables(name) {
                     return _variables[name];
@@ -48,14 +59,6 @@ namespace Durwella.Azure.ArmTesting.Services
             var root = JObject.Parse(armTemplate);
             var variablesObject = (JObject)root["variables"];
             var variablesDictionary = variablesObject.ToObject<Dictionary<string, string>>();
-            //var dict = new Dictionary<string, string>();
-            //foreach (var variable in variablesObject)
-            //{
-            //    var key = variable.Key;
-            //    var value = variable.Value.Value<string>();
-            //    dict.Add(key, value);
-            //}
-
             var expression = root["resources"][0]["name"].ToString();
             var result = Evaluate(expression, variablesDictionary);
             var output = armTemplate.Replace('"' + expression + '"', result);
