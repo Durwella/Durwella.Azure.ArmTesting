@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Durwella.Azure.ArmTesting.Services
 {
-    public class JintFunctionEvaluation
+    public class JintFunctionEvaluation : IArmFunctionEvaluation
     {
         public string Evaluate(string armFunctionExpression, Dictionary<string, string> variables = null)
         {
@@ -73,6 +73,7 @@ namespace Durwella.Azure.ArmTesting.Services
                 if (expression.StartsWith("[") && expression.EndsWith("]"))
                 {
                     var result = Evaluate(expression, variablesDictionary);
+                    // TODO: Format any error in evaluation of JS function
                     armTemplate = armTemplate.Replace('"' + expression + '"', result);
                 }
             }

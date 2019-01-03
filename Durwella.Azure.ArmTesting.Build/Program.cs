@@ -16,6 +16,7 @@ namespace Durwella.Azure.ArmTesting.Build
             _container = new Container();
             _container.Register<IArmTemplateEnumeration, ArmTemplateEnumeration>();
             _container.Register<IProjectFileEnumeration, BuildalyzerProjectEnumeration>();
+            _container.Register<IArmFunctionEvaluation, JintFunctionEvaluation>();
         }
 
         static void Main(string[] args)
@@ -45,6 +46,9 @@ namespace Durwella.Azure.ArmTesting.Build
                 // HACK: Quick wire up of name checking
                 var nameChecking = new NameChecking();
                 var json = File.ReadAllText(armTemplate);
+                // Evaluated functions in arm template like "[concat('foo', 'bar')]"
+                var functionEvaluation = _container.GetInstance<IArmFunctionEvaluation>();
+                json = functionEvaluation.EvaluateAndReplaceFunctions(json);
                 var errors = nameChecking.CheckTemplate(json)
                     .Select(e => new ArmTemplateError(armTemplate, e));
                 foreach (var error in errors)
