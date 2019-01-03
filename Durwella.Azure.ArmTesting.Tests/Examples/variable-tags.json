@@ -1,0 +1,27 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {},
+  "variables": {
+    "tagValue1": "the 1st",
+    "tagValue2": "the 2nd"
+  },
+  "resources": [
+    {
+      "name": "test",
+      "type": "Microsoft.Storage/storageAccounts",
+      "location": "Central US",
+      "apiVersion": "2016-01-01",
+      "sku": {
+        "name": "Standard_LRS"
+      },
+      "dependsOn": [],
+      "kind": "Storage",
+      "tags": {
+        "tag1": "[variables('tagValue1')]",
+        "tag2": "[variables('tagValue2')]"
+      }
+    }
+  ],
+  "outputs": {}
+}

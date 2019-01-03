@@ -60,6 +60,19 @@ namespace Durwella.Azure.ArmTesting.Tests.Services
             nameChecking.CheckTemplate(output).Should().BeEmpty();
         }
 
+        [Theory(DisplayName = "variable tags"), AutoMoqData]
+        public void VariableTags(JintFunctionEvaluation subject, NameChecking nameChecking)
+        {
+            var path = Path.Combine("Examples", "variable-tags.json");
+            var text = File.ReadAllText(path);
+
+            var output = subject.EvaluateAndReplaceFunctions(text);
+
+            output.Should().Contain("\"tag1\": \"the 1st\",");
+            output.Should().Contain("\"tag2\": \"the 2nd\"");
+            nameChecking.CheckTemplate(output).Should().BeEmpty();
+        }
+
         [Theory(DisplayName = "variable evaluation"), AutoMoqData]
         public void VariableEvaluation(JintFunctionEvaluation subject)
         {

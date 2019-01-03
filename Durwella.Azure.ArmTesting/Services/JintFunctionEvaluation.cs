@@ -3,6 +3,7 @@ using Jint.Native;
 using Jint.Runtime;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Durwella.Azure.ArmTesting.Services
 {
@@ -37,6 +38,10 @@ namespace Durwella.Azure.ArmTesting.Services
                 function concat() {
                   return ''.concat.apply('', arguments);
                 }
+
+                function resourceGroup() {
+                    return { location: '' };
+                }
             ");
             var expression = armFunctionExpression.TrimStart('[').TrimEnd(']');
             // The JINT REPL example was helpful for this code
@@ -59,10 +64,19 @@ namespace Durwella.Azure.ArmTesting.Services
             var root = JObject.Parse(armTemplate);
             var variablesObject = (JObject)root["variables"];
             var variablesDictionary = variablesObject.ToObject<Dictionary<string, string>>();
-            var expression = root["resources"][0]["name"].ToString();
-            var result = Evaluate(expression, variablesDictionary);
-            var output = armTemplate.Replace('"' + expression + '"', result);
-            return output;
+            // TODO: evaluate variables only once
+            var leaves = root.Descendants().Where(p => !p.HasValues);
+            foreach (var leaf in leaves)
+            {
+                // TODO: Test if is string
+                var expression = leaf.ToString();
+                if (expression.StartsWith("[") && expression.EndsWith("]"))
+                {
+                    var result = Evaluate(expression, variablesDictionary);
+                    armTemplate = armTemplate.Replace('"' + expression + '"', result);
+                }
+            }
+            return armTemplate;
         }
     }
 }
